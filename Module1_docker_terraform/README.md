@@ -55,7 +55,7 @@ Given the following docker-compose.yaml, what is the hostname and port that pgad
 ``` Answer: postgres:5432```
 
 The diagram below explained the connection of pgAdmin and postgres
-![pgadminExplain](./Postgres%20Container.png) 
+![pgadminExplain](./docker_postgres/Postgres%20Container.png) 
 
 
 ## Prepare dataset inside docker containers
