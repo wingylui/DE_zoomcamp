@@ -104,8 +104,7 @@ WHERE DATE(tpep_dropoff_datetime) BETWEEN '2024-03-01' AND '2024-03-15';
 ```Ans : False```
 
 
-9. 
-No Points: Write a SELECT count(*) query FROM the materialized table you created. How many bytes does it estimate will be read? Why?
+9. No Points: Write a SELECT count(*) query FROM the materialized table you created. How many bytes does it estimate will be read? Why?
 
 ```
 Ans : 0 Bytes, Since SELECT COUNT(*) is a metadata operation. The count is pre-computed and store so BigQuery does not need to scan any data, which results in 0 bytes read.
