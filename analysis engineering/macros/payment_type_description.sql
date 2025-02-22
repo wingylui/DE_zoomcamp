@@ -13,3 +13,5 @@
         when 6 then 'Voided trip'
         else 'EMPTY'
     end
+
+{%- endmacro %}
