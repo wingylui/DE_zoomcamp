@@ -74,7 +74,7 @@ Provided that you can connect to the server, what's the output of the last comma
 Now we need to send the data to the green-trips topic
 
 Read the data, and keep only these columns:
-
+```
 'lpep_pickup_datetime',
 'lpep_dropoff_datetime',
 'PULocationID',
@@ -82,27 +82,20 @@ Read the data, and keep only these columns:
 'passenger_count',
 'trip_distance',
 'tip_amount'
-Now send all the data using this code:
-
-producer.send(topic_name, value=message)
-For each row (message) in the dataset. In this case, message is a dictionary.
-
-After sending all the messages, flush the data:
-
-producer.flush()
-Use from time import time to see the total time
-
-from time import time
-
-t0 = time()
-
-# ... your code
-
-t1 = time()
-took = t1 - t0
+```
 How much time did it take to send the entire dataset and flush?
 
-Question 5: Build a Sessionization Window (2 points)
+```Ans: 82.79738593101501```
+
+---
+
+### Question 5: Build a Sessionization Window (2 points)
+
+```
+docker compose exec jobmanager ./bin/flink run -py /opt/src/job/session_job.py --pyFiles /opt/src/job -d
+```
+
+
 Now we have the data in the Kafka stream. It's time to process it.
 
 Copy aggregation_job.py and rename it to session_job.py
