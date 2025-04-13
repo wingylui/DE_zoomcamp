@@ -12,7 +12,6 @@ parser = argparse.ArgumentParser(description='GCP setup')
 parser.add_argument('--projectid', required=True, help='GCP Project ID')
 parser.add_argument('--BIGQuerydataset', required=True, help='BigQuery Dataset Name')
 parser.add_argument('--bucket', required=True, help='Bucket Name')
-parser.add_argument('--dataset', required=True, help='dataset')
 args = parser.parse_args()
 
 # jar for spark run in GCP
@@ -24,7 +23,6 @@ gcs_connector_jar = "gcs-connector-hadoop3-latest.jar"
 GCP_projectID = args.projectid
 BigQuery_dataset = args.BIGQuerydataset
 bucket = args.bucket
-dataset = args.dataset
 
 # buckets link
 birthRate_gs = f"gs://{args.bucket}/birth-rate_*.csv"
