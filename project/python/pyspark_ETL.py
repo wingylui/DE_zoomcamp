@@ -88,8 +88,6 @@ combined_df = combined_df \
 # replace 0 for all the null values
 combined_df = combined_df.fillna(0, subset=["birth_rate", "life_expectancy", "international_immigrants", "refugees"])
 
-# clustering the table
-combined_df = combined_df.sortWithinPartitions("Code") 
 
 
 # BigQuery tables
@@ -99,7 +97,6 @@ country = "dim_country"
 # writing tables with partition and clustering the table
 combined_df.write.format("bigquery").mode("append") \
             .option("writeMethod", "direct") \
-            .partitionBy("Year") \
             .saveAsTable(f"{GCP_projectID}:{BigQuery_dataset}.{master_table}")
 
 country_df.write.format("bigquery").mode("append") \
