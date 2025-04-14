@@ -28,10 +28,10 @@ bucket = args.bucket
 year = args.year
 
 # buckets link
-birthRate_gs = f"gs://{args.bucket}/birth-rate_{year}.csv"
-life_gs = f"gs://{args.bucket}/life-expectancy_{year}.csv"
-refugee_gs = f"gs://{args.bucket}/refugee-population_{year}.csv"
-migrant_gs = f"gs://{args.bucket}/migrant-total_{year}.csv"
+birthRate_gs = f"gs://{args.bucket}/birth_rate/birth-rate_*.csv"
+life_gs = f"gs://{args.bucket}/life_expectancy/life-expectancy_*.csv"
+refugee_gs = f"gs://{args.bucket}/refugee/refugee-population_*.csv"
+migrant_gs = f"gs://{args.bucket}/migrant/migrant-total_*.csv"
 
 # %%
 # create spark session
@@ -39,8 +39,6 @@ spark = SparkSession.builder \
     .appName("DE_Zoomcamp_Population") \
     .config("spark.jars", f"{bucket_jar}/{bigquery_jar},{bucket_jar}/{gcs_connector_jar}") \
     .config("spark.hadoop.fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem") \
-    .config("spark.executor.heartbeatInterval", "3660s") \
-    .config("spark.network.timeout", "3600s") \
     .getOrCreate()
 
 # read data from bucket
