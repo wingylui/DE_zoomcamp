@@ -13,6 +13,7 @@ parser = argparse.ArgumentParser(description='GCP setup')
 parser.add_argument('--projectid', required=True, help='GCP Project ID')
 parser.add_argument('--BIGQuerydataset', required=True, help='BigQuery Dataset Name')
 parser.add_argument('--bucket', required=True, help='Bucket Name')
+parser.add_argument('--year', required=True, help='year')
 args = parser.parse_args()
 
 # jar for spark run in GCP
@@ -24,12 +25,13 @@ gcs_connector_jar = "gcs-connector-hadoop3-latest.jar"
 GCP_projectID = args.projectid
 BigQuery_dataset = args.BIGQuerydataset
 bucket = args.bucket
+year = args.year
 
 # buckets link
-birthRate_gs = f"gs://{args.bucket}/birth-rate_*.csv"
-life_gs = f"gs://{args.bucket}/life-expectancy_*.csv"
-refugee_gs = f"gs://{args.bucket}/refugee-population_*.csv"
-migrant_gs = f"gs://{args.bucket}/migrant-total_*.csv"
+birthRate_gs = f"gs://{args.bucket}/birth-rate_{year}.csv"
+life_gs = f"gs://{args.bucket}/life-expectancy_{year}.csv"
+refugee_gs = f"gs://{args.bucket}/refugee-population_{year}.csv"
+migrant_gs = f"gs://{args.bucket}/migrant-total_{year}.csv"
 
 # %%
 # create spark session
@@ -100,11 +102,13 @@ country = "dim_country"
 # writing tables with partition and clustering the table
 combined_df.write.format("bigquery").mode("append") \
             .option("writeMethod", "direct") \
-            .saveAsTable(f"{GCP_projectID}:{BigQuery_dataset}.{master_table}")
+            .option("table", f"{GCP_projectID}:{BigQuery_dataset}.{master_table}") \
+            .save()
 
 country_df.write.format("bigquery").mode("append") \
             .option("writeMethod", "direct") \
-            .saveAsTable(f"{GCP_projectID}:{BigQuery_dataset}.{country}")
+            .option("table", f"{GCP_projectID}:{BigQuery_dataset}.{master_table}") \
+            .save()
 
 
 # stop the session
