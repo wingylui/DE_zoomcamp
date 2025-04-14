@@ -174,7 +174,7 @@ cython_debug/
 project/keys
 
 # terraform states files
-project/Terraform/*.tfstate
-project/Terraform/*.tfstate.backup
-project/Terraform/*.lock.hcl
+terraform.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
 project/Terraform/.terraform
