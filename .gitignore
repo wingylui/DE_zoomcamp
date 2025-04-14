@@ -176,5 +176,5 @@ project/keys
 # terraform states files
 terraform.tfstate
 *.tfstate.backup
-.terraform.lock.hcl
+*.terraform.lock.hcl
 project/Terraform/.terraform

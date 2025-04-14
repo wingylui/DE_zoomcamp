@@ -105,7 +105,7 @@ combined_df.write.format("bigquery").mode("append") \
 
 country_df.write.format("bigquery").mode("append") \
             .option("writeMethod", "direct") \
-            .option("table", f"{GCP_projectID}:{BigQuery_dataset}.{master_table}") \
+            .option("table", f"{GCP_projectID}:{BigQuery_dataset}.{country}") \
             .save()
 
 
