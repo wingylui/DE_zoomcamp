@@ -172,3 +172,9 @@ cython_debug/
 
 .DS_Store
 project/keys
+
+# terraform states files
+project/Terraform/*.tfstate
+project/Terraform/*.tfstate.backup
+project/Terraform/*.lock.hcl
+project/Terraform/.terraform
