@@ -28,10 +28,10 @@ bucket = args.bucket
 year = args.year
 
 # buckets link
-birthRate_gs = f"gs://{args.bucket}/birth_rate/birth-rate_*.csv"
-life_gs = f"gs://{args.bucket}/life_expectancy/life-expectancy_*.csv"
-refugee_gs = f"gs://{args.bucket}/refugee/refugee-population_*.csv"
-migrant_gs = f"gs://{args.bucket}/migrant/migrant-total_*.csv"
+birthRate_gs = f"gs://{args.bucket}/birth_rate/birth-rate_{year}.csv"
+life_gs = f"gs://{args.bucket}/life_expectancy/life-expectancy_{year}.csv"
+refugee_gs = f"gs://{args.bucket}/refugee/refugee-population_{year}.csv"
+migrant_gs = f"gs://{args.bucket}/migrant/migrant-total_{year}.csv"
 
 # %%
 # create spark session

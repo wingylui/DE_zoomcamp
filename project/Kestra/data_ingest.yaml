@@ -1,0 +1,89 @@
+id: world_population_ingest
+namespace: dezoomcamp_world_population
+
+variables:
+  year: "{{trigger.date?? execution.startDate | date('yyyy')}}"
+
+  birth_rate_file: "birth-rate_{{ vars.year }}.csv"
+  life_file: "life-expectancy_{{ vars.year }}.csv"
+  migrant_file: "migrant-total_{{ vars.year }}.csv"
+  refugee_file: "refugee-population_{{ vars.year }}.csv"
+
+  birth_rate_gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/birth_rate/{{vars.birth_rate_file}}"
+  life_gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/life_expectancy/{{vars.life_file}}"
+  migrant_gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/migrant/{{vars.migrant_file}}"
+  refugee_gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}//refugee/{{vars.refugee_file}}"
+
+
+tasks:
+  - id: ingest_data
+    type: io.kestra.plugin.scripts.python.Script
+    warningOnStdErr: false
+    beforeCommands:
+      - pip install pandas
+    script: |
+      import pandas as pd
+    
+      year = {{ vars.year }}
+      dataset_url = {
+                    "birth-rate"        : "https://github.com/wingylui/DE_zoomcamp/raw/refs/heads/main/project/dataset/birth-rate.csv.gz",
+                    "life-expectancy"   : "https://github.com/wingylui/DE_zoomcamp/raw/refs/heads/main/project/dataset/life-expectancy.csv.gz",
+                    "migrant-total"     : "https://github.com/wingylui/DE_zoomcamp/raw/refs/heads/main/project/dataset/migrant-total.csv.gz",
+                    "refugee-population":"https://github.com/wingylui/DE_zoomcamp/raw/refs/heads/main/project/dataset/refugee-population.csv.gz"
+                    }
+      for file_name in dataset_url.keys():
+        url = dataset_url[file_name]
+              
+        df = pd.read_csv(url, compression = "gzip")
+        filter_df = df.loc[(df["Year"] == year) & (df["Code"].notna()), :] 
+
+        filter_df.to_csv(f"{file_name}_{year}.csv") 
+
+    outputFiles:
+      - "*.csv"
+
+  - id: birth_rate_dataset_upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.ingest_data.outputFiles[render(vars.birth_rate_file)] }}"
+    to: "{{ vars.birth_rate_gcs_file }}"
+
+  - id: life_expectancy_dataset_upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.ingest_data.outputFiles[render(vars.birth_rate_file)] }}"
+    to: "{{ render(var.life_gcs_file) }}"
+
+  - id: migrant_dataset_upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.ingest_data.outputFiles[render(vars.birth_rate_file)] }}"
+    to: "{{ render(var.migrant_gcs_file) }}"
+  
+  - id: refugee_dataset_upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.ingest_data.outputFiles[render(vars.birth_rate_file)] }}"
+    to: "{{ render(var.refugee_gcs_file) }}"
+
+
+  - id: ETL_pyspark
+    type: io.kestra.plugin.gcp.dataproc.batches.PySparkSubmit
+    mainPythonFileUri: "https://raw.githubusercontent.com/wingylui/DE_zoomcamp/refs/heads/main/project/python/pyspark_ETL.py"
+    name: pyspark_ETL
+    args:
+    - "--year= {{ vars.year }}"
+    - "--projectid={{ kv('GCP_PROJECT_ID') }}"
+    - "--BIGQuerydataset={{ kv('GCP_DATASET') }}"
+    - "--bucket={{ kv('GCP_BUCKET_NAME') }}"
+    region: australia-southeast2
+    
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{kv('GCP_CREDS')}}"
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"
+
+triggers:
+  - id: pipeline_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "@yearly"

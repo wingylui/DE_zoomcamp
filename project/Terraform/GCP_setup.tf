@@ -1,8 +1,6 @@
 variable "credentials" {
   description = "My Credentials"
-  default     = "<Path to your Service Account json file>"
-  #ex: if you have a directory where this file is called keys with your service account json file
-  #saved there as my-creds.json you could use default = "./keys/my-creds.json"
+  default     = "../keys/consummate-yew-455500-d5-b52aed0e5bc2.json"
 }
 
 
@@ -14,13 +12,13 @@ variable "project" {
 variable "region" {
   description = "Region"
   #Update the below to your desired region
-  default     = "australia-southeast2"
+  default     = "asia-east2"
 }
 
 variable "location" {
   description = "Project Location"
   #Update the below to your desired location
-  default     = "AU"
+  default     = "asia-east2"
 }
 
 variable "bq_dataset_name" {
@@ -32,7 +30,7 @@ variable "bq_dataset_name" {
 variable "gcs_bucket_name" {
   description = "My Storage Bucket Name"
   #Update the below to a unique bucket name
-  default     = "deZoomcampPopulation"
+  default     = "de_zoomcamp-population-world"
 }
 
 variable "gcs_storage_class" {
