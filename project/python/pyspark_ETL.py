@@ -4,6 +4,7 @@ import argparse
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 
+
 from google.cloud import bigquery
 
 # %%
@@ -36,6 +37,8 @@ spark = SparkSession.builder \
     .appName("DE_Zoomcamp_Population") \
     .config("spark.jars", f"{bucket_jar}/{bigquery_jar},{bucket_jar}/{gcs_connector_jar}") \
     .config("spark.hadoop.fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem") \
+    .config("spark.executor.heartbeatInterval", "3660s") \
+    .config("spark.network.timeout", "3600s") \
     .getOrCreate()
 
 # read data from bucket
