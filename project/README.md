@@ -80,7 +80,7 @@ This is a **batch pipeline** scheduled via **Kestra** to run automatically.
 
 ![Dashboard](./image/dashboard.png)
 
-🔗 [View the Dashboard](https://lookerstudio.google.com/s/t-1t2PklNdw) <!-- Replace with actual link -->
+🔗 [View the Dashboard](https://lookerstudio.google.com/reporting/52ea6e84-c6a3-4042-ad1d-e8a9187283a1)
 
 The dashboard includes:
 
